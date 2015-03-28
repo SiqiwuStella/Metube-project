@@ -1,3 +1,4 @@
+<?php session_start();?>
 <html>
     <head>
 <style>
@@ -14,7 +15,7 @@ nav {
     width:140px;
     background-color:#DF5500;
     float:left;
-    padding:px;
+    padding:5px;
     text-align: center;
 }
 
@@ -49,7 +50,7 @@ a{
 <body>
     <header><h1 style="font-family:verdana" align="center"><br>Welcome to Metube!</h1>
         <?php
-        session_start();
+        
         echo "<h5 style='font-family:verdana' align='right'>Welcome  ";
         ?>
         <a style="text-decoration:underline" href="myprofile.php" target="center" ><?php echo $_SESSION["useName"]?></a>

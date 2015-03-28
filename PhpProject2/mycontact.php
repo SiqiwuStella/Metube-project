@@ -4,6 +4,9 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+<?php 
+session_start();
+include 'connect_database.php'; ?>
 <html>
     <head>
         <style>
@@ -54,23 +57,40 @@ and open the template in the editor.
                 </tr>
                 <tr>
                     <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
                     <th>Username</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Gender</th>
                     <th>Block/Unblock</th>
                     <th>Remove Friend</th>
                 </tr>
-                <?php 
-                $self=$_SERVER["PHP_SELF"];
-                for ($i=1;$i<=5;$i++){
-                    if ($i%2==1) {
-                echo "
+                <?php
+                
+                $email = $_SESSION["eml"];
+                $usenm = $_SESSION["useName"];
+                $useid = $_SESSION["userid"];
+                //echo $useid;
+                $sql = "SELECT user_id, friend_id FROM friend WHERE user_id='$useid'";
+                $result = $conn->query($sql);
+                //$sql = "SELECT user_id, username, email, status,gender FROM User WHERE email='$email'";
+                if ($result->num_rows > 0) {
+                    // output data of each row
+                    $self = $_SERVER["PHP_SELF"];
+                    $i=1;
+                    while ($row = $result->fetch_assoc()) {
+                        $friendid = $row["friend_id"];
+                        //echo $friendid;
+                    $sql = "SELECT user_id, username, email, status,gender FROM User WHERE user_id='$friendid'";
+                    $frdinfo=$conn->query($sql);  
+                    $info = $frdinfo->fetch_assoc();
+                    if ($i % 2 == 1) {
+                        echo "
                 <tr>
                     <th scope='row'>$i</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-              
+                    <td>".$info['username']."</td>
+                    <td>".$info['email']."</td>
+                    <td>".$info['status']."</td>
+                    <td>".$info['gender']."</td>
                     <td>
                     <input src='htmlspecialchars($self)' type='radio'  name='blunbl$i' value='block'>BLOCK</input>
                     <input src='htmlspecialchars($self)' type='radio'  name='blunbl$i' value='unlock'>UNBLOCK</input>
@@ -80,13 +100,14 @@ and open the template in the editor.
                     </td>
                 </tr>";
                     }
-                    if ($i%2==0) {
-                echo "
+                    if ($i % 2 == 0) {
+                        echo "
                 <tr class='alt'>
                     <th scope='row'>$i</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td>".$info['username']."</td>
+                    <td>".$info['email']."</td>
+                    <td>".$info['status']."</td>
+                    <td>".$info['gender']."</td>
                     <td>
                     <input src='mycontact.php' type='radio'  name='blunbl$i' value='block'>BLOCK</input>
                     <input src='mycontact.php' type='radio'  name='blunbl$i' value='unlock'>UNBLOCK</input>
@@ -98,13 +119,17 @@ and open the template in the editor.
                 ";
                     }
                     echo $_GET['block'];
-                }?>
+                    $i++;
+                }
+                }
                 
+                ?>
+
                 </tbody>
             </table>
         </div><!-- /example -->
 
-<div>  
+        <div>  
             <table id="contacts" style="right">
                 <tbody>
                     <tr>
@@ -117,10 +142,10 @@ and open the template in the editor.
                     <th>Username</th>
                     <th>Remove Foe</th>
                 </tr>
-          <?php 
-                for ($i=1;$i<=5;$i++){
-                    if ($i%2==1) {
-                echo "
+                <?php
+                for ($i = 1; $i <= 5; $i++) {
+                    if ($i % 2 == 1) {
+                        echo "
                 <tr>
                     <th scope='row'>$i</th>
                     <td>Mark</td>
@@ -131,8 +156,8 @@ and open the template in the editor.
                     </td>
                 </tr>";
                     }
-                    if ($i%2==0) {
-                echo "
+                    if ($i % 2 == 0) {
+                        echo "
                 <tr class='alt'>
                     <th scope='row'>$i</th>
                     <td>Mark</td>
@@ -144,11 +169,14 @@ and open the template in the editor.
                 </tr>
                 ";
                     }
-                }?>
-                
+                }
+
+                $conn->close();
+                ?>
+
                 </tbody>
             </table>
         </div><!-- /example -->        
-        
+
     </body>
 </html>

@@ -1,7 +1,6 @@
 <html>
     <head>
         <style>
-
 a{
     color:black;
     text-decoration:none;
@@ -10,10 +9,25 @@ a{
     </head>
     <body>
 <?php
-// define variable and set them to null
-$nameerr = $emailerr = $gendererr = $websiteerr = "";
-$name = $email = $gender = $status = "";
+$servername = "mysql1.cs.clemson.edu";
+$username = "Metube_2b0d";
+$password = "metube15";
+$dbname = "Metube_yu37";
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+//Get user information
+session_start();
+//echo $_SESSION["useName"];
+$e=$_SESSION["eml"];
+$name=$_SESSION["useName"];
+// define variable and set them to null
+//$nameerr = $emailerr = $gendererr = $websiteerr = "";
+//$name = $email = $gender = $status = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
    if (empty($_POST["name"])) {
      $nameerr = "Name is required.";
@@ -40,15 +54,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
      $status = "";
    } else {
      $status = test($_POST["status"]);
+     $sql = "UPDATE User SET status='$status' WHERE email='$e'";
+     $conn->query($sql);
+     
    }
-
    if (empty($_POST["gender"])) {
      $gendererr = "Gender is required";
    } else {
      $gender = test($_POST["gender"]);
+     if($gender=='female')
+        {
+            $sql = "UPDATE User SET gender='f' WHERE email='$e'";
+        }
+        else{
+            $sql = "UPDATE User SET gender='m' WHERE email='$e'";
+            //$sql = "UPDATE User SET status='$status' WHERE email='$e'";
+        }
+        $conn->query($sql);
+        
    }
 }
-
 function test($inpt) {
    $inpt = trim($inpt);
    $inpt = stripslashes($inpt);
@@ -61,11 +86,9 @@ function test($inpt) {
     <br>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"> 
         <h3 style="color:indigo; font-family:verdana">
-Name: <input type="text" name="name" maxlength="8"  placeholder="Enter Name" value="<?php echo $name;?>">
-<span class="error">* <?php echo $nameerr;?></span>
+Name: <?php echo $name?>
 <br><br>
-E-mail: <input type="text" name="email" placeholder="Enter Email" value="<?php echo $email;?>">
-<span class="error">* <?php echo $emailerr;?></span>
+E-mail: <?php echo $e?>
 <br><br>
 Status:<br> 
 <textarea name="status" rows="3" cols="40" placeholder="I'm happy."><?php echo $status;?></textarea>
