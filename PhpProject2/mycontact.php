@@ -53,8 +53,15 @@ include 'connect_database.php'; ?>
             <table id="contacts">
                 <tbody>
                     <tr>
-                <h2 style="font-family:Helvetica">MY FRIENDS  <input src="addfriend.php" type="button" name="addfr" value="Add Friend"></input></h2>
-                </tr>
+                <h2 style="font-family:Helvetica">MY FRIENDS 
+                    <!-- Add friends--><form mechod="post" action="addfriend.php" class="current">
+                <input  type="submit"  value="Add Friend"></input></h2>
+                <input type="hidden" name="addfr" value="1">
+                </form>
+                <?php
+                //$_SESSION["add"]=$_POST["addfr"];
+                ?>
+            </tr>
                 <tr>
                     <th>#</th>
                     <th>Username</th>
@@ -75,10 +82,12 @@ include 'connect_database.php'; ?>
                 //$sql = "SELECT user_id, username, email, status,gender FROM User WHERE email='$email'";
                 if ($result->num_rows > 0) {
                     // output data of each row
+                   
                     $self = $_SERVER["PHP_SELF"];
                     $i=1;
                     while ($row = $result->fetch_assoc()) {
                         $friendid = $row["friend_id"];
+                        
                         //echo $friendid;
                     $sql = "SELECT user_id, username, email, status,gender FROM User WHERE user_id='$friendid'";
                     $frdinfo=$conn->query($sql);  
@@ -86,40 +95,80 @@ include 'connect_database.php'; ?>
                     if ($i % 2 == 1) {
                         echo "
                 <tr>
+                    <form method='post' action='mycontact.php'>
                     <th scope='row'>$i</th>
                     <td>".$info['username']."</td>
                     <td>".$info['email']."</td>
                     <td>".$info['status']."</td>
                     <td>".$info['gender']."</td>
+                     
+                    <td>      
+                    <input  type='radio'  name='blunbl' value='1'>BLOCK</input>
+                    <input  type='radio'  name='blunbl' value='0'>UNBLOCK</input>
+                    </td>                   
                     <td>
-                    <input src='htmlspecialchars($self)' type='radio'  name='blunbl$i' value='block'>BLOCK</input>
-                    <input src='htmlspecialchars($self)' type='radio'  name='blunbl$i' value='unlock'>UNBLOCK</input>
+                    <input  type='hidden' name='remove' value='1'></input>
+                    <input  type='submit' value='Remove'></input>
                     </td>
-                    <td>
-                    <input src='htmlspecialchars($self)' type='button' name='remove$i' value='Remove'></input>
-                    </td>
-                </tr>";
+                    </form>
+                </tr>";//remove a friend
+                        if ($_POST["blunbl"]==1)
+                        {
+                         
+                        }
+                        else{
+                            
+                        }
+                            if($_POST["remove"]==1)
+                            {
+                                $sql="DELETE FROM friend WHERE user_id=$useid && friend_id=$friendid";
+                                $conn->query($sql);
+                                echo "<script>alert('Your friend is successfully Deleted!');location.href='".$_SERVER["HTTP_REFERER"]."';</script>";
+                            }
+                            $_POST["remove"]=0;  
+
                     }
                     if ($i % 2 == 0) {
                         echo "
                 <tr class='alt'>
+                
                     <th scope='row'>$i</th>
                     <td>".$info['username']."</td>
                     <td>".$info['email']."</td>
                     <td>".$info['status']."</td>
                     <td>".$info['gender']."</td>
+                     
+                    <td>      
+                    <input  type='radio'  name='blunbl' value='block'>BLOCK</input>
+                    <input  type='radio'  name='blunbl' value='unlock'>UNBLOCK</input>
+                    </td>    
+                    <form method='post' action='mycontact.php'>
                     <td>
-                    <input src='mycontact.php' type='radio'  name='blunbl$i' value='block'>BLOCK</input>
-                    <input src='mycontact.php' type='radio'  name='blunbl$i' value='unlock'>UNBLOCK</input>
+                    <input  type='hidden' name='remove' value='1'></input>
+                    <input  type='submit' value='Remove'></input>
                     </td>
-                    <td>
-                    <input src='htmlspecialchars($self)' type='button' name='remove$i' value='Remove'></input>
-                    </td>
+                    </form>
                 </tr>
                 ";
+                      if ($_POST["blunbl$friendid"]==block)
+                        {
+                         
+                        }
+                        else{
+                            
+                        }
+                            if($_POST["remove"]==1)
+                            {
+                                $sql="DELETE FROM friend WHERE user_id=$useid && friend_id=$friendid";
+                                $conn->query($sql);
+                                echo "<script>alert('Your friend is successfully Deleted!');location.href='".$_SERVER["HTTP_REFERER"]."';</script>";
+                            }
+                            $_POST["remove"]=0;  
+                    
                     }
-                    echo $_GET['block'];
+                    //echo $_GET['block'];
                     $i++;
+                        
                 }
                 }
                 
@@ -133,44 +182,107 @@ include 'connect_database.php'; ?>
             <table id="contacts" style="right">
                 <tbody>
                     <tr>
-                <h2 style="font-family:Helvetica">MY FOES  <input src="addfriend.php" type="button" name="addfr" value="Add Foe"></input></h2>
-                </tr>
+                <h2 style="font-family:Helvetica">MY FOES  
+            <form mechod="post" action="addfoe.php" class="current">
+            <input  type="submit" value="Add Foes"></input></h2>
+                <input type="hidden" name="addfoe" value="1">
+                </form>    
+            </tr>
                 <tr>
                     <th>#</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Username</th>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
                     <th>Remove Foe</th>
                 </tr>
                 <?php
-                for ($i = 1; $i <= 5; $i++) {
-                    if ($i % 2 == 1) {
+                
+                //echo $useid;
+                $sql = "SELECT user_id, foe_id FROM foe WHERE user_id='$useid'";
+                $result = $conn->query($sql);
+                //$sql = "SELECT user_id, username, email, status,gender FROM User WHERE email='$email'";
+                if ($result->num_rows > 0) {
+                    // output data of each row
+                   
+                    
+                    $j=1;
+                    while ($row = $result->fetch_assoc()) {
+                        $foeid = $row["foe_id"];
+                        
+                        //echo $friendid;
+                    $sql = "SELECT user_id, username, email, status,gender FROM User WHERE user_id='$foeid'";
+                    $foeinfo=$conn->query($sql);  
+                    $infof = $foeinfo->fetch_assoc();
+                    if ($j % 2 == 1) {
                         echo "
                 <tr>
+                    <form method='post' action='mycontact.php'>
                     <th scope='row'>$i</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td>".$infof['username']."</td>
+                    <td>".$infof['email']."</td>
+                    <td>".$infof['gender']."</td>
+                    
+
                     <td>
-                    <input src='htmlspecialchars($self)' type='button' name='remove$i' value='Remove'></input>
+                    <input  type='hidden' name='removef' value='1'></input>
+                    <input  type='submit' value='Remove'></input>
                     </td>
-                </tr>";
+                    </form>
+                </tr>";//remove a friend
+                        
+                            if($_POST["removef"]==1)
+                            {
+                                $sql="DELETE FROM foe WHERE user_id=$useid && foe_id=$foeid";
+                                $conn->query($sql);
+                                echo "<script>alert('Your foe is successfully Deleted!');location.href='".$_SERVER["HTTP_REFERER"]."';</script>";
+                            }
+                            $_POST["removef"]=0;  
+
                     }
-                    if ($i % 2 == 0) {
+                    if ($j % 2 == 0) {
                         echo "
                 <tr class='alt'>
-                    <th scope='row'>$i</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                
+                    <th scope='row'>$j</th>
+                    <td>".$infof['username']."</td>
+                    <td>".$infof['email']."</td>
+                    
+                    <td>".$infof['gender']."</td>
+                     
+                    
+                    <form method='post' action='mycontact.php'>
                     <td>
-                    <input src='htmlspecialchars($self)' type='button' name='remove$i' value='Remove'></input>
+                    <input  type='hidden' name='removef' value='1'></input>
+                    <input  type='submit' value='Remove'></input>
                     </td>
+                    </form>
                 </tr>
                 ";
+                      
+                            if($_POST["removef"]==1)
+                            {
+                                $sql="DELETE FROM foe WHERE user_id=$useid && foe_id=$foeid";
+                                $conn->query($sql);
+                            echo "<script>alert('Your foe is successfully Deleted!');location.href='".$_SERVER["HTTP_REFERER"]."';</script>";
+                            }
+                            $_POST["removef"]=0;  
+                    
                     }
+                    //echo $_GET['block'];
+                    $j++;
+                        
                 }
-
+                }
+                
+                
+//process value
+//blcok an unblock
+          
+                
+                
+                
+                
+//end connection
                 $conn->close();
                 ?>
 

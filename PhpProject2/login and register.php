@@ -65,10 +65,10 @@ Password: <br><input type="password" name="passw"><br/></br>
             // output data of each row
             while ($row = $result->fetch_assoc()) {
                 $useName= $row["username"];
-                echo $row["username"];
+               // echo $row["username"];
                 
                 $_SESSION["userid"]=$row["user_id"];
-                echo $_SESSION["userid"];
+                //echo $_SESSION["userid"];
                 $_SESSION["useName"]=$useName ;
                 
                 $_SESSION["eml"]=$row["email"];

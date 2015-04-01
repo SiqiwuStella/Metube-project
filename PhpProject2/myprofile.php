@@ -1,3 +1,4 @@
+<?php session_start();?>
 <html>
     <head>
         <style>
@@ -20,11 +21,17 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-//Get user information
-session_start();
+
 //echo $_SESSION["useName"];
 $e=$_SESSION["eml"];
 $name=$_SESSION["useName"];
+
+//Get user information
+$sql="SELECT status,gender FROM User WHERE username='$name'";
+$result=$conn->query($sql);
+$row = $result->fetch_assoc();
+$status=$row["status"];
+$gender=$row["gender"];
 // define variable and set them to null
 //$nameerr = $emailerr = $gendererr = $websiteerr = "";
 //$name = $email = $gender = $status = "";
@@ -94,10 +101,10 @@ Status:<br>
 <textarea name="status" rows="3" cols="40" placeholder="I'm happy."><?php echo $status;?></textarea>
 <br><br>
 Gender:
-<input type="radio" name="gender" value ="female" 
-<?php if (isset($gender) && $gender=="female") echo 'checked="checked"';?>>Female
-<input type="radio" name="gender" value="male" 
-<?php if (isset($gender) && $gender=="male") echo 'checked="checked"';?>>Male
+<input type="radio" name="gender" value ="f" 
+<?php if (isset($gender) && $gender=="f") echo 'checked="checked"';?>>Female
+<input type="radio" name="gender" value="m" 
+<?php if (isset($gender) && $gender=="m") echo 'checked="checked"';?>>Male
 <span class="error">* <?php echo $gendererr;?></span>
 <br><br>
 <input style="color:indigo" type="submit" name="submit" value="Submit">
