@@ -27,10 +27,12 @@ if ($_FILES["fileToUpload"]["size"] > 200000000000) {
 	$uploadOk = 0;
 }
 // Allow certain file formats
-if($videoFileType != "webm" && $videoFileType != "mkv" && $videoFileType != "flv"
+/* if($videoFileType != "webm" && $videoFileType != "mkv" && $videoFileType != "flv"
 		&& $videoFileType != "vob" && $videoFileType != "avi" && $videoFileType != "mov" && $videoFileType != "wmv" 
 		&& $videoFileType != "mp4" && $videoFileType != "mpg" && $videoFileType != "mpeg" && $videoFileType != "3gp" 
-		&& $videoFileType != "rm" && $videoFileType != "yuv" ) {
+		&& $videoFileType != "rm" && $videoFileType != "yuv" ) { */
+if($videoFileType != "WebM" && $videoFileType != "webm" && $videoFileType != "mp4" && $videoFileType != "MP4" 
+		&& $videoFileType != "OGG" && $videoFileType != "ogg") {
 			echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
 			$uploadOk = 0;
 		}

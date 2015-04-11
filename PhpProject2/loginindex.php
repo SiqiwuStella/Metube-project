@@ -76,6 +76,9 @@ a{
 <div class="clearfloat"></div>
 
 </nav>
+	<aside>
+        <a href="Messages.php" target="center" >Chat/Message<br></a>    
+    </aside>
 <section>
     <iframe frameborder="0" src="mainpage.php" width="910" height="515" name='center'></iframe>
         
